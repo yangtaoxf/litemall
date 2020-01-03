@@ -64,7 +64,7 @@ public class LitemallOrderService {
         String now = df.format(LocalDate.now());
         String orderSn = now + getRandomNum(6);
         while (countByOrderSn(userId, orderSn) != 0) {
-            orderSn = getRandomNum(6);
+            orderSn = now + getRandomNum(6);
         }
         return orderSn;
     }
@@ -126,10 +126,8 @@ public class LitemallOrderService {
     }
 
     public List<LitemallOrder> queryUnpaid(int minutes) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expired = now.minusMinutes(minutes);
         LitemallOrderExample example = new LitemallOrderExample();
-        example.or().andOrderStatusEqualTo(OrderUtil.STATUS_CREATE).andAddTimeLessThan(expired).andDeletedEqualTo(false);
+        example.or().andOrderStatusEqualTo(OrderUtil.STATUS_CREATE).andDeletedEqualTo(false);
         return litemallOrderMapper.selectByExample(example);
     }
 
